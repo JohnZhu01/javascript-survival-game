@@ -15,7 +15,7 @@ class playerSprite {
     this.frameX = 0;
 
     this.playerImage = new Image();
-    this.playerImage.src = "/character/hood.png";
+    this.playerImage.src = "character/hood.png";
   }
 
   draw(ctx) {
@@ -38,15 +38,8 @@ class playerSprite {
 
 const player = new playerSprite();
 
-//----//
-//----- Player Animation----//
-this.animations={
-  idle:{row:}
-}
-
-
 // Player movement//
-const playerSpeed = 4;
+const playerSpeed = 3;
 const keys = {};
 const movementKeys = [
   "ArrowUp",
