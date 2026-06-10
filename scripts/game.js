@@ -4,6 +4,15 @@ function gameLoop() {
 
   drawBackground();
   player.draw(ctx);
+
+  enemies.forEach((enemy) => {
+    enemy.draw(ctx);
+
+    if (checkCollision(player, enemy)) {
+      console.log("Player collided with enemy");
+    }
+  });
+
   requestAnimationFrame(gameLoop);
 }
 

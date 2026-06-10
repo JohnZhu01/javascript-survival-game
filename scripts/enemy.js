@@ -1,36 +1,60 @@
 // Enemy logic //
-// Enemy
-class enemySprite{
-    constructor(x,y){
-        this.x=x;
-        this.y=y;
+class EnemySprite {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.width = 64;
+    this.height = 64;
 
-        // frames
-        this.width=this.width;
-        this.height=this.height;
+    this.frameWidth = 310;
+    this.frameHeight = 310;
+    this.frameX = 0;
+    this.frameY = 0;
 
-        this.speed=this.speed;
+    this.speed = 1;
 
-        this.image= new Image();
-        this.image.src=""
+    this.image = new Image();
+    this.image.src = "enemy/LargeSlime_Grey.png";
+  }
 
-    }
+  draw(ctx) {
+    ctx.drawImage(
+      this.image,
+      this.frameX * this.frameWidth,
+      this.frameY * this.frameHeight,
+      this.frameWidth,
+      this.frameHeight,
+      this.x,
+      this.y,
+      this.width,
+      this.height,
+    );
+  }
+
 }
-// Spawn enemy
-const enemies= [];
 
 
-// Spawn points
+// enemy player collision
 
+function checkCollision(player,enemy)
+{
+    // sprite dimension variables
+    const playerLeft=player.x;
+    const playerRight=player.x +player.width;
+    const playerTop=player.y;
+    const playerBottom= player.y +player.height;
 
+    const enemyLeft = enemy.x;
+    const enemyRight = enemy.x + enemy.width;
+    const enemyTop = enemy.y;
+    const enemyBottom = enemy.y + enemy.height;
 
-// move toward player
+    // collision logic
+    const separated=
+    playerRight<enemyLeft||playerLeft>enemyRight||playerBottom<enemyTop||playerTop>enemyBottom
 
+    return !separated
+}
 
-
-
-
-
-
-
-// death logic
+const enemies = [];
+enemies.push(new EnemySprite(500, 600));
