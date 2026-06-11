@@ -13,6 +13,10 @@ class EnemySprite {
 
     this.speed = 1;
 
+    // health
+    this.health=2;
+    this.damage=1;
+
     this.image = new Image();
     this.image.src = "enemy/LargeSlime_Grey.png";
   }

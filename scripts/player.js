@@ -157,15 +157,22 @@ function playerAttack(){
   // attack range
   const playerCenterX=player.x+player.width/2;
   const playerCenterY=player.y + player.height/2;
-  const enemyCenterX= enemy.x+enemy.width/2;
-  const enemyCenterY=enemy.y+enemy.height/2;
 
-  const distance=Math.hypot(enemyCenterX-playerCenterX, enemyCenterY-playerCenterY);
+  enemies.forEach((enemy) => {
+    const enemyCenterX=enemy.x+enemy.width/2;
+    const enemyCenterY=enemy.y+enemy.height/2;
 
-  if (distance <=player.attackRange){enemy.health -=player.attackDamage}
+    const distance=Math.hypot(
+      enemyCenterX-playerCenterX,
+      enemyCenterY-playerCenterY,
+    );
+
+    if (distance <=player.attackRange){
+      enemy.health -=player.attackDamage;
+    }
+  });
 }
 
 
 // Player Attack Event//
 document.addEventListener("click", playerAttack);
-
