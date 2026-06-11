@@ -1,5 +1,11 @@
-function gameLoop() {
+let previousTime = 0;
+
+function gameLoop(currentTime) {
+  const deltaTime = currentTime - previousTime;
+  previousTime = currentTime;
+
   playerMovement();
+  player.updateAnimation(deltaTime);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   drawBackground();
@@ -20,4 +26,4 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 }
 
-gameLoop();
+requestAnimationFrame(gameLoop);
