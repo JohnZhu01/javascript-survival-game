@@ -16,6 +16,26 @@ class EnemySprite {
     this.image = new Image();
     this.image.src = "enemy/LargeSlime_Grey.png";
   }
+  // Move toward the player.
+  update(player) {
+    const enemyCenterX = this.x + this.width / 2;
+    const enemyCenterY = this.y + this.height / 2;
+    const playerCenterX = player.x + player.width / 2;
+    const playerCenterY = player.y + player.height / 2;
+
+    const distanceX = playerCenterX - enemyCenterX;
+    const distanceY = playerCenterY - enemyCenterY;
+    const distance = Math.hypot(distanceX, distanceY);
+
+    // Stop once the enemy reaches the player's center.
+    if (distance <= this.speed) {
+      return;
+    }
+
+    // Move toward the player at a consistent speed.
+    this.x += (distanceX / distance) * this.speed;
+    this.y += (distanceY / distance) * this.speed;
+  }
 
   draw(ctx) {
     ctx.drawImage(
@@ -30,7 +50,6 @@ class EnemySprite {
       this.height,
     );
   }
-
 }
 
 
@@ -56,5 +75,11 @@ function checkCollision(player,enemy)
     return !separated
 }
 
+// spawn multiple enemies
 const enemies = [];
+
+
+// max enemies
+
+
 enemies.push(new EnemySprite(500, 600));
