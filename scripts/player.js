@@ -1,4 +1,5 @@
-// Player//
+
+// Player class//
 class playerSprite {
   constructor() {
     this.x = 600;
@@ -8,11 +9,18 @@ class playerSprite {
 
     this.frameWidth = 32;
     this.frameHeight = 32;
+    // animation states
     this.animations = {
-      idle: { row: 0, frames: 1 },
+      idle: { row: 0, frames: 2, frameDuration:300},
+      walk:{row:2, frames:4, frameDuration:120},
+      run:{row:3, frames:8, frameDuration:100},
+      attack:{row:8,frames:8, frameDuration:100},
+      damage:{row:6, frames:3, frameDuration:250},
+      death:{row:7,frames:8, frameDuration:100},
     };
     this.animation = "idle";
     this.frameX = 0;
+    this.frameTimer=0;
 
     this.playerImage = new Image();
     this.playerImage.src = "character/hood.png";
@@ -93,5 +101,12 @@ function playerMovement() {
   player.y = Math.max(0, Math.min(player.y, canvas.height - player.height));
 }
 
-// Player Attack//
-//wip
+// Player Attack wip//
+document.addEventListener("click", attack);
+
+
+// attack function
+function attack(){
+
+
+}
