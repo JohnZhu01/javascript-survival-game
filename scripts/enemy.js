@@ -78,8 +78,21 @@ function checkCollision(player,enemy)
 // spawn multiple enemies
 const enemies = [];
 
+// enemy spawn
+function spawnEnemy(){
+    const x=Math.random()*(canvas.width-64);
+    const y=Math.random()*(canvas.height-64);
+    enemies.push(new EnemySprite(x,y));
+}
 
 // max enemies
+const maxEnemies=10;
+
+// spawn timer
+setInterval(() => {
+  if (enemies.length < maxEnemies) {
+    spawnEnemy();
+  }
+}, 2000);
 
 
-enemies.push(new EnemySprite(500, 600));

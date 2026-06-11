@@ -7,6 +7,9 @@ function gameLoop() {
 
   enemies.forEach((enemy) => {
     enemy.update(player);
+  });
+
+  enemies.forEach((enemy) => {
     enemy.draw(ctx);
 
     if (checkCollision(player, enemy)) {
