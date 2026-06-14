@@ -18,6 +18,7 @@ class playerSprite {
       death: { row: 7, frames: 8, frameDuration: 100 },
     };
     this.animation = "idle";
+    this.facingDirection="right"
     this.frameX = 0;
     this.frameTimer = 0;
 
@@ -71,6 +72,14 @@ class playerSprite {
 
   draw(ctx) {
     const row = this.animations[this.animation].row;
+    ctx.save();
+
+    if(this.facingDirection==="left"){
+      ctx.translate(this.x+ this.width, this.y);
+      ctx.scale(-1,1);
+    }
+    else{ctx.translate(this.x,this.y)}
+  
 
     ctx.drawImage(
       this.playerImage,
@@ -78,11 +87,13 @@ class playerSprite {
       row * this.frameHeight,
       this.frameWidth,
       this.frameHeight,
-      this.x,
-      this.y,
+      0,
+      0,
       this.width,
       this.height,
     );
+
+    ctx.restore();
   }
 }
 //
@@ -123,6 +134,7 @@ document.addEventListener("keyup", (event) => {
 function playerMovement() {
   if (keys.ArrowUp || keys.w) {
     player.y -= playerSpeed;
+ 
   }
 
   if (keys.ArrowDown || keys.s) {
@@ -130,11 +142,13 @@ function playerMovement() {
   }
 
   if (keys.ArrowLeft || keys.a) {
-    player.x -= playerSpeed;
+    player.x -= playerSpeed; 
+    player.facingDirection="left"
   }
 
   if (keys.ArrowRight || keys.d) {
     player.x += playerSpeed;
+    player.facingDirection="right"
   }
   //-----//
 
