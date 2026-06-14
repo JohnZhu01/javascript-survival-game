@@ -12,13 +12,24 @@ function gameLoop(currentTime) {
   player.draw(ctx);
 
   enemies.forEach((enemy) => {
+    if (enemy.health <= 0) {
+      enemy.death();
+    }
+
     enemy.update(player);
+    enemy.updateAnimation(deltaTime);
   });
+
+  for (let i = enemies.length - 1; i >= 0; i--) {
+    if (enemies[i].deathAnimationFinished) {
+      enemies.splice(i, 1);
+    }
+  }
 
   enemies.forEach((enemy) => {
     enemy.draw(ctx);
 
-    if (checkCollision(player, enemy)) {
+    if (!enemy.isDead && checkCollision(player, enemy)) {
       console.log("Player collided with enemy");
     }
   });

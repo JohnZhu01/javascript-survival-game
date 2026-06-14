@@ -25,10 +25,10 @@ class playerSprite {
 
     // attack
     this.isAttacking=false;
-    this.attackDamage=1;
+    this.attackDamage=2;
     this.attackRate=500;
     this.lastAttackTime=0;
-    this.attackRange=80;
+    this.attackRange=70;
     // player health
     this.playerHealth=3;
 
@@ -38,8 +38,8 @@ class playerSprite {
   }
 
   // Change animation state.
-  setAnimation(animationName) {
-    if (this.animation === animationName) {
+  setAnimation(animationName, restart = false) {
+    if (this.animation === animationName && !restart) {
       return;
     }
 
@@ -52,22 +52,20 @@ class playerSprite {
     const currentAnimation = this.animations[this.animation];
     this.frameTimer += deltaTime;
 
-    if (this.frameTimer < currentAnimation.frameDuration) {
-      return;
+    while (this.frameTimer >= currentAnimation.frameDuration) {
+      this.frameTimer -= currentAnimation.frameDuration;
+
+      if (
+        this.animation === "attack" &&
+        this.frameX === currentAnimation.frames - 1
+      ) {
+        this.isAttacking = false;
+        this.setAnimation("idle");
+        return;
+      }
+
+      this.frameX = (this.frameX + 1) % currentAnimation.frames;
     }
-
-    this.frameTimer -= currentAnimation.frameDuration;
-
-    if (
-      this.animation === "attack" &&
-      this.frameX === currentAnimation.frames - 1
-    ) {
-      this.isAttacking = false;
-      this.setAnimation("idle");
-      return;
-    }
-
-    this.frameX = (this.frameX + 1) % currentAnimation.frames;
   }
 
   draw(ctx) {
@@ -143,12 +141,16 @@ function playerMovement() {
 
   if (keys.ArrowLeft || keys.a) {
     player.x -= playerSpeed; 
-    player.facingDirection="left"
+    if (!player.isAttacking) {
+      player.facingDirection="left"
+    }
   }
 
   if (keys.ArrowRight || keys.d) {
     player.x += playerSpeed;
-    player.facingDirection="right"
+    if (!player.isAttacking) {
+      player.facingDirection="right"
+    }
   }
   //-----//
 
@@ -159,20 +161,28 @@ function playerMovement() {
   player.y = Math.max(0, Math.min(player.y, canvas.height - player.height));
 }
 // attack
-function playerAttack(){
+function playerAttack(event){
+  if (event.button !== 0) {
+    return;
+  }
+
   // attack rate
   const currentTime=Date.now();
 
   if(currentTime-player.lastAttackTime<player.attackRate){return;}
   player.lastAttackTime=currentTime;
   player.isAttacking=true;
-  player.setAnimation("attack");
+  player.setAnimation("attack", true);
 
   // attack range
   const playerCenterX=player.x+player.width/2;
   const playerCenterY=player.y + player.height/2;
 
   enemies.forEach((enemy) => {
+    if (enemy.isDead) {
+      return;
+    }
+
     const enemyCenterX=enemy.x+enemy.width/2;
     const enemyCenterY=enemy.y+enemy.height/2;
 
@@ -181,12 +191,21 @@ function playerAttack(){
       enemyCenterY-playerCenterY,
     );
 
-    if (distance <=player.attackRange){
+    const enemyIsInFront =
+      player.facingDirection === "right"
+        ? enemyCenterX >= playerCenterX
+        : enemyCenterX <= playerCenterX;
+
+    if (distance <=player.attackRange && enemyIsInFront){
       enemy.health -=player.attackDamage;
+
+      if (enemy.health <= 0) {
+        enemy.death();
+      }
     }
   });
 }
 
 
 // Player Attack Event//
-document.addEventListener("click", playerAttack);
+canvas.addEventListener("pointerdown", playerAttack);
