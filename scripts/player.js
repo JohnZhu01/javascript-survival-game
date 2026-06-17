@@ -31,6 +31,9 @@ class playerSprite {
     this.attackRange=70;
     // player health
     this.playerHealth=3;
+    this.lastDamageTime=0;
+    this.damageCooldown=1000;
+    this.isDead=false;
 
 
     this.playerImage = new Image();
@@ -61,6 +64,21 @@ class playerSprite {
       ) {
         this.isAttacking = false;
         this.setAnimation("idle");
+        return;
+      }
+
+      if (
+        this.animation === "damage" &&
+        this.frameX === currentAnimation.frames - 1
+      ) {
+        this.setAnimation("idle");
+        return;
+      }
+
+      if (
+        this.animation === "death" &&
+        this.frameX === currentAnimation.frames - 1
+      ) {
         return;
       }
 
@@ -130,6 +148,10 @@ document.addEventListener("keyup", (event) => {
 });
 
 function playerMovement() {
+  if (player.isDead) {
+    return;
+  }
+
   if (keys.ArrowUp || keys.w) {
     player.y -= playerSpeed;
  
@@ -162,6 +184,10 @@ function playerMovement() {
 }
 // attack
 function playerAttack(event){
+  if (player.isDead) {
+    return;
+  }
+
   if (event.button !== 0) {
     return;
   }

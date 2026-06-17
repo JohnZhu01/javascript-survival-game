@@ -1,3 +1,34 @@
+// Player life system//
+const heartImage=new Image();
+heartImage.src="life/Heart_container.png";
+
+function drawHearts(){
+  for (let i=0; i<player.playerHealth;i++){
+    ctx.drawImage(heartImage, 20 + i * 40, 65, 32, 32);
+  }
+}
+
+function damagePlayer(damage) {
+  const currentTime=Date.now();
+
+  if (currentTime-player.lastDamageTime < player.damageCooldown) {
+    return;
+  }
+
+  player.playerHealth -= damage;
+  player.lastDamageTime=currentTime;
+
+  if (player.playerHealth <= 0) {
+    player.playerHealth=0;
+    player.isDead=true;
+    player.setAnimation("death", true);
+    return;
+  }
+
+  player.setAnimation("damage", true);
+}
+
+// ---Score Board---//
 let previousTime = 0;
 let score=0;
 
@@ -12,7 +43,7 @@ function drawScore(){
   ctx.font = "bold 24px Arial";
   ctx.fillText(`Score: ${score}`, 24, 40);
 }
-
+// ---Game Loop--//
 function gameLoop(currentTime) {
   const deltaTime = currentTime - previousTime;
   previousTime = currentTime;
@@ -44,12 +75,13 @@ function gameLoop(currentTime) {
     enemy.draw(ctx);
 
     if (!enemy.isDead && checkCollision(player, enemy)) {
-      console.log("Player collided with enemy");
+      damagePlayer(enemy.damage);
     }
   });
 
   // Score//
   drawScore();
+  drawHearts()
 
   requestAnimationFrame(gameLoop);
 }

@@ -1,5 +1,5 @@
 // Enemy logic //
-class EnemySprite {
+class enemySprite {
   constructor(x, y) {
     this.x = x;
     this.y = y;
@@ -108,25 +108,26 @@ class EnemySprite {
 // enemy player collision
 
 function checkCollision(player, enemy) {
-  // sprite dimension variables
-  const playerLeft = player.x;
-  const playerRight = player.x + player.width;
-  const playerTop = player.y;
-  const playerBottom = player.y + player.height;
+  const padding = 18;
+  const playerBox = getHitbox(player, padding);
+  const enemyBox = getHitbox(enemy, padding);
 
-  const enemyLeft = enemy.x;
-  const enemyRight = enemy.x + enemy.width;
-  const enemyTop = enemy.y;
-  const enemyBottom = enemy.y + enemy.height;
-
-  // collision logic
   const separated =
-    playerRight < enemyLeft ||
-    playerLeft > enemyRight ||
-    playerBottom < enemyTop ||
-    playerTop > enemyBottom;
+    playerBox.right < enemyBox.left ||
+    playerBox.left > enemyBox.right ||
+    playerBox.bottom < enemyBox.top ||
+    playerBox.top > enemyBox.bottom;
 
   return !separated;
+}
+
+function getHitbox(sprite, padding) {
+  return {
+    left: sprite.x + padding,
+    right: sprite.x + sprite.width - padding,
+    top: sprite.y + padding,
+    bottom: sprite.y + sprite.height - padding,
+  };
 }
 
 // spawn multiple enemies
@@ -136,7 +137,7 @@ const enemies = [];
 function spawnEnemy() {
   const x = Math.random() * (canvas.width - 64);
   const y = Math.random() * (canvas.height - 64);
-  enemies.push(new EnemySprite(x, y));
+  enemies.push(new enemySprite(x, y));
 }
 
 // max enemies
