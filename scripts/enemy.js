@@ -11,7 +11,6 @@ class enemySprite {
     this.frameX = 0;
     this.frameY = 0;
 
-    // animation states
     this.animations = {
       move: { row: 2, frames: 4, frameDuration: 200 },
       death: { row: 3, frames: 4, frameDuration: 100 },
@@ -22,28 +21,27 @@ class enemySprite {
     this.deathX = null;
     this.deathY = null;
     this.frameTimer = 0;
-    this.speed = 0.5;
+    this.speed = 0.5 + difficultyLevel * 0.1;
 
-    // health
-    this.health = 2;
+    this.health = 2 + Math.floor(difficultyLevel / 3);
     this.damage = 1;
 
     this.image = new Image();
     this.image.src = "enemy/LargeSlime_Grey.png";
   }
 
-  death(){
+  death() {
     if (this.isDead) return;
 
-    this.isDead=true;
-    this.deathX=this.x;
-    this.deathY=this.y;
-    this.speed=0;
-    this.animation="death";
-    this.frameX=0;
-    this.frameTimer=0;
+    this.isDead = true;
+    this.deathX = this.x;
+    this.deathY = this.y;
+    this.speed = 0;
+    this.animation = "death";
+    this.frameX = 0;
+    this.frameTimer = 0;
   }
-  // Move toward the player.
+
   update(player) {
     if (this.isDead) {
       this.x = this.deathX;
@@ -60,15 +58,14 @@ class enemySprite {
     const distanceY = playerCenterY - enemyCenterY;
     const distance = Math.hypot(distanceX, distanceY);
 
-    // Stop once the enemy reaches the player's center.
     if (distance <= this.speed) {
       return;
     }
 
-    // Move toward the player at a consistent speed.
     this.x += (distanceX / distance) * this.speed;
     this.y += (distanceY / distance) * this.speed;
   }
+
   updateAnimation(deltaTime) {
     const currentAnimation = this.animations[this.animation];
     this.frameTimer += deltaTime;
@@ -105,8 +102,7 @@ class enemySprite {
   }
 }
 
-// enemy player collision
-
+// enemy player collision//
 function checkCollision(player, enemy) {
   const padding = 18;
   const playerBox = getHitbox(player, padding);
@@ -130,22 +126,39 @@ function getHitbox(sprite, padding) {
   };
 }
 
-// spawn multiple enemies
+// spawn multiple enemies//
 const enemies = [];
 
-// enemy spawn
+// enemy spawn//
 function spawnEnemy() {
-  const x = Math.random() * (canvas.width - 64);
-  const y = Math.random() * (canvas.height - 64);
+  const spawnSide = Math.floor(Math.random() * 3);
+  let x;
+  let y;
+
+  if (spawnSide === 0) {
+    // left spawn//
+    x = -64;
+    y = canvas.height / 3 + Math.random() * (canvas.height * 2 / 3);
+  } else if (spawnSide === 1) {
+    // right spawn//
+    x = canvas.width;
+    y = canvas.height / 3 + Math.random() * (canvas.height * 2 / 3);
+  } else {
+    // bottom spawn//
+    x = Math.random() * canvas.width;
+    y = canvas.height;
+  }
+
   enemies.push(new enemySprite(x, y));
 }
 
-// max enemies
-const maxEnemies = 5;
+function getMaxEnemies() {
+  return 5 + difficultyLevel;
+}
 
-// spawn timer
+// spawn timer//
 setInterval(() => {
-  if (enemies.length < maxEnemies) {
+  if (gameState === "playing" && enemies.length < getMaxEnemies()) {
     spawnEnemy();
   }
 }, 2000);

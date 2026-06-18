@@ -15,4 +15,3 @@ function drawBackground() {
 }
 
 backgroundImage.addEventListener("load", drawBackground);
-// -----//

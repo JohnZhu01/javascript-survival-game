@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>JS survival</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>JS Survival</title>
 </head>
 <body>
-    <canvas id="canvas1">
+  <div id="gameContainer">
+    <canvas id="canvas1"></canvas>
 
-    </canvas>
-    <script src="scripts/background.js"></script>
-    <script src="scripts/player.js"></script>
-    <script src="scripts/enemy.js"></script>
-    <script src="scripts/game.js"></script>
+    <div id="menuScreen" class="screen">
+      <h1>Slime Survivor</h1>
+      <button id="startButton" type="button">Start Game</button>
+    </div>
+
+    <div id="gameOverScreen" class="screen hidden">
+      <h1>Game Over</h1>
+      <p id="finalScore">Score: 0</p>
+      <button id="playAgainButton" type="button">Play Again</button>
+    </div>
+  </div>
+<audio id="bgMusic" src="background-music/mp3/04 - Silent Forest.mp3" loop></audio>
+  <script src="scripts/background.js"></script>
+  <script src="scripts/player.js"></script>
+  <script src="scripts/enemy.js"></script>
+  <script src="scripts/game.js"></script>
 </body>
 </html>
