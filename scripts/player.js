@@ -27,8 +27,8 @@ class playerSprite {
     this.attackDamage = 2;
     this.attackRate = 500;
     this.lastAttackTime = 0;
-    this.attackRange = 72;
-    this.attackHeight = 46;
+    this.attackRange = 44;
+    this.attackHeight = 40;
 
     this.playerHealth = 3;
     this.lastDamageTime = 0;
@@ -236,14 +236,14 @@ function getAttackBox() {
   if (player.facingDirection === "left") {
     return {
       left: player.x - player.attackRange,
-      right: player.x + player.width / 2,
+      right: player.x + 10,
       top: y,
       bottom: y + player.attackHeight,
     };
   }
 
   return {
-    left: player.x + player.width / 2,
+    left: player.x + player.width - 10,
     right: player.x + player.width + player.attackRange,
     top: y,
     bottom: y + player.attackHeight,

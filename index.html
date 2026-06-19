@@ -1,30 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <title>JS Survival</title>
-</head>
-<body>
-  <div id="gameContainer">
-    <canvas id="canvas1"></canvas>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>JS Survival</title>
+  </head>
+  <body>
+    <div id="gameContainer">
+      <canvas id="canvas1"></canvas>
 
-    <div id="menuScreen" class="screen">
-      <h1>Slime Survivor</h1>
-      <button id="startButton" type="button">Start Game</button>
-    </div>
+      <div id="menuScreen" class="screen">
+        <h1>Slime Survivor</h1>
+        <button id="startButton" type="button">Start Game</button>
 
-    <div id="gameOverScreen" class="screen hidden">
-      <h1>Game Over</h1>
-      <p id="finalScore">Score: 0</p>
-      <button id="playAgainButton" type="button">Play Again</button>
+        <div class="controls">
+          <h2>Controls</h2>
+
+          <div class="controlRow">
+            <span>Move</span>
+            <div class="keys">
+              <kbd>W</kbd>
+              <kbd>A</kbd>
+              <kbd>S</kbd>
+              <kbd>D</kbd>
+              <span>or</span>
+              <kbd>Arrow Keys</kbd>
+            </div>
+          </div>
+
+          <div class="controlRow">
+            <span>Attack</span>
+            <div class="keys">
+              <kbd>Left Click</kbd>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="gameOverScreen" class="screen hidden">
+        <h1>Game Over</h1>
+        <p id="finalScore">Score: 0</p>
+        <button id="playAgainButton" type="button">Play Again</button>
+      </div>
     </div>
-  </div>
-<audio id="bgMusic" src="background-music/mp3/04 - Silent Forest.mp3" loop></audio>
-  <script src="scripts/background.js"></script>
-  <script src="scripts/player.js"></script>
-  <script src="scripts/enemy.js"></script>
-  <script src="scripts/game.js"></script>
-</body>
+    <audio
+      id="bgMusic"
+      src="background-music/mp3/04 - Silent Forest.mp3"
+      loop
+    ></audio>
+    <script src="scripts/background.js"></script>
+    <script src="scripts/player.js"></script>
+    <script src="scripts/enemy.js"></script>
+    <script src="scripts/game.js"></script>
+  </body>
 </html>

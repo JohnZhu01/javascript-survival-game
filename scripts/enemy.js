@@ -21,7 +21,7 @@ class enemySprite {
     this.deathX = null;
     this.deathY = null;
     this.frameTimer = 0;
-    this.speed = 0.5 + difficultyLevel * 0.1;
+    this.speed = Math.min(0.5 + difficultyLevel * 0.1, 1.5);
 
     this.health = 2 + Math.floor(difficultyLevel / 3);
     this.damage = 1;
@@ -153,7 +153,7 @@ function spawnEnemy() {
 }
 
 function getMaxEnemies() {
-  return 5 + difficultyLevel;
+  return Math.min(5 + difficultyLevel, 12);
 }
 
 // spawn timer//
