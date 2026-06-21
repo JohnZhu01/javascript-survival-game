@@ -247,7 +247,7 @@ function playerAttack(event) {
   setAttackDirectionFromKeys();
   player.lastAttackTime = currentTime;
   player.isAttacking = true;
-  player.attackBox = getAttackBox();
+  player.attackBox = attackArea();
   player.hitEnemies.clear();
   player.setAnimation("attack", true);
   checkAttackHits();
@@ -273,7 +273,7 @@ function checkAttackHits() {
       return;
     }
 
-    if (checkBoxCollision(player.attackBox, getHitbox(enemy, 18))) {
+    if (touching(player.attackBox, hitbox(enemy, 18))) {
       enemy.health -= player.attackDamage;
       player.hitEnemies.add(enemy);
 
@@ -284,7 +284,7 @@ function checkAttackHits() {
   });
 }
 
-function getAttackBox() {
+function attackArea() {
   const playerCenterY = player.y + player.height / 2;
   const y = playerCenterY - player.attackHeight / 2;
 
@@ -305,7 +305,7 @@ function getAttackBox() {
   };
 }
 
-function checkBoxCollision(boxA, boxB) {
+function touching(boxA, boxB) {
   const separated =
     boxA.right < boxB.left ||
     boxA.left > boxB.right ||

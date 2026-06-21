@@ -111,8 +111,8 @@ class enemySprite {
 // enemy player collision//
 function checkCollision(player, enemy) {
   const padding = 18;
-  const playerBox = getHitbox(player, padding);
-  const enemyBox = getHitbox(enemy, padding);
+  const playerBox = hitbox(player, padding);
+  const enemyBox = hitbox(enemy, padding);
 
   const separated =
     playerBox.right < enemyBox.left ||
@@ -123,7 +123,7 @@ function checkCollision(player, enemy) {
   return !separated;
 }
 
-function getHitbox(sprite, padding) {
+function hitbox(sprite, padding) {
   return {
     left: sprite.x + padding,
     right: sprite.x + sprite.width - padding,
@@ -158,13 +158,13 @@ function spawnEnemy() {
   enemies.push(new enemySprite(x, y));
 }
 
-function getMaxEnemies() {
+function maxEnemies() {
   return Math.min(5 + difficultyLevel, 12);
 }
 
 // spawn timer//
 setInterval(() => {
-  if (gameState === "playing" && enemies.length < getMaxEnemies()) {
+  if (gameState === "playing" && enemies.length < maxEnemies()) {
     spawnEnemy();
   }
 }, 2000);
