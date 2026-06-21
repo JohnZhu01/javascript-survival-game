@@ -47,12 +47,16 @@ function startGame() {
   player.lastAttackTime = 0;
   player.isDead = false;
   player.isAttacking = false;
+  player.attackBox = null;
+  player.hitEnemies.clear();
   player.facingDirection = "right";
   player.setAnimation("idle", true);
 
   for (const key in keys) {
     keys[key] = false;
   }
+
+  lastHorizontalKey = null;
   difficultyTimer = 0;
   difficultyLevel = 1;
 }
@@ -176,6 +180,7 @@ function gameLoop(currentTime) {
 
   updateDifficulty(deltaTime);
   updateEnemies(deltaTime);
+  checkAttackHits();
   removeDeadEnemies();
   drawEnemies();
 

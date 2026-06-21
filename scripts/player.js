@@ -11,7 +11,6 @@ class playerSprite {
 
     this.animations = {
       idle: { row: 0, frames: 2, frameDuration: 300 },
-      walk: { row: 2, frames: 4, frameDuration: 120 },
       run: { row: 3, frames: 8, frameDuration: 100 },
       attack: { row: 8, frames: 8, frameDuration: 100 },
       damage: { row: 6, frames: 3, frameDuration: 250 },
@@ -28,7 +27,9 @@ class playerSprite {
     this.attackRate = 500;
     this.lastAttackTime = 0;
     this.attackRange = 44;
-    this.attackHeight = 40;
+    this.attackHeight = 52;
+    this.attackBox = null;
+    this.hitEnemies = new Set();
 
     this.playerHealth = 3;
     this.lastDamageTime = 0;
@@ -61,6 +62,7 @@ class playerSprite {
         this.frameX === currentAnimation.frames - 1
       ) {
         this.isAttacking = false;
+        this.attackBox = null;
         this.setAnimation("idle");
         return;
       }
@@ -149,6 +151,28 @@ document.addEventListener("keyup", (event) => {
   }
 
   keys[event.key] = false;
+
+  if (
+    lastHorizontalKey === "left" &&
+    (event.key === "ArrowLeft" || event.key === "a")
+  ) {
+    lastHorizontalKey = keys.ArrowRight || keys.d ? "right" : null;
+  }
+
+  if (
+    lastHorizontalKey === "right" &&
+    (event.key === "ArrowRight" || event.key === "d")
+  ) {
+    lastHorizontalKey = keys.ArrowLeft || keys.a ? "left" : null;
+  }
+});
+
+window.addEventListener("blur", () => {
+  for (const key in keys) {
+    keys[key] = false;
+  }
+
+  lastHorizontalKey = null;
 });
 
 // Player movement//
@@ -159,17 +183,21 @@ function playerMovement() {
 
   const movingLeft = keys.ArrowLeft || keys.a;
   const movingRight = keys.ArrowRight || keys.d;
+  let isMoving = false;
 
   if (keys.ArrowUp || keys.w) {
     player.y -= playerSpeed;
+    isMoving = true;
   }
 
   if (keys.ArrowDown || keys.s) {
     player.y += playerSpeed;
+    isMoving = true;
   }
 
   if (movingLeft && (!movingRight || lastHorizontalKey === "left")) {
     player.x -= playerSpeed;
+    isMoving = true;
 
     if (!player.isAttacking) {
       player.facingDirection = "left";
@@ -178,6 +206,7 @@ function playerMovement() {
 
   if (movingRight && (!movingLeft || lastHorizontalKey === "right")) {
     player.x += playerSpeed;
+    isMoving = true;
 
     if (!player.isAttacking) {
       player.facingDirection = "right";
@@ -185,7 +214,14 @@ function playerMovement() {
   }
 
   player.x = Math.max(0, Math.min(player.x, canvas.width - player.width));
-  player.y = Math.max(0, Math.min(player.y, canvas.height - player.height));
+  player.y = Math.max(
+    canvas.height / 4,
+    Math.min(player.y, canvas.height - player.height),
+  );
+
+  if (!player.isAttacking && player.animation !== "damage") {
+    player.setAnimation(isMoving ? "run" : "idle");
+  }
 }
 
 // attack//
@@ -208,19 +244,38 @@ function playerAttack(event) {
     return;
   }
 
+  setAttackDirectionFromKeys();
   player.lastAttackTime = currentTime;
   player.isAttacking = true;
+  player.attackBox = getAttackBox();
+  player.hitEnemies.clear();
   player.setAnimation("attack", true);
+  checkAttackHits();
+}
 
-  const attackBox = getAttackBox();
+function setAttackDirectionFromKeys() {
+  if (keys.ArrowLeft || keys.a) {
+    player.facingDirection = "left";
+  }
+
+  if (keys.ArrowRight || keys.d) {
+    player.facingDirection = "right";
+  }
+}
+
+function checkAttackHits() {
+  if (!player.isAttacking || !player.attackBox) {
+    return;
+  }
 
   enemies.forEach((enemy) => {
-    if (enemy.isDead) {
+    if (enemy.isDead || player.hitEnemies.has(enemy)) {
       return;
     }
 
-    if (checkBoxCollision(attackBox, getHitbox(enemy, 18))) {
+    if (checkBoxCollision(player.attackBox, getHitbox(enemy, 18))) {
       enemy.health -= player.attackDamage;
+      player.hitEnemies.add(enemy);
 
       if (enemy.health <= 0) {
         enemy.death();

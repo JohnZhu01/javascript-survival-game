@@ -1,4 +1,10 @@
 // Enemy logic //
+const largeSlimeImages = [
+  "enemy/LargeSlime_Grey.png",
+  "enemy/LargeSlime_Purple.png",
+  "enemy/LargeSlime_Red.png",
+];
+
 class enemySprite {
   constructor(x, y) {
     this.x = x;
@@ -9,7 +15,6 @@ class enemySprite {
     this.frameWidth = 310;
     this.frameHeight = 310;
     this.frameX = 0;
-    this.frameY = 0;
 
     this.animations = {
       move: { row: 2, frames: 4, frameDuration: 200 },
@@ -23,11 +28,12 @@ class enemySprite {
     this.frameTimer = 0;
     this.speed = Math.min(0.5 + difficultyLevel * 0.1, 1.5);
 
-    this.health = 2 + Math.floor(difficultyLevel / 3);
+    this.health = 2;
     this.damage = 1;
 
     this.image = new Image();
-    this.image.src = "enemy/LargeSlime_Grey.png";
+    this.image.src =
+      largeSlimeImages[Math.floor(Math.random() * largeSlimeImages.length)];
   }
 
   death() {
