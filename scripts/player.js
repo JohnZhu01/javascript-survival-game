@@ -1,3 +1,5 @@
+const attackSound = document.getElementById("attackSound");
+
 // Player class//
 class playerSprite {
   constructor() {
@@ -243,6 +245,10 @@ function playerAttack(event) {
   if (currentTime - player.lastAttackTime < player.attackRate) {
     return;
   }
+
+  attackSound.currentTime = 0;
+  attackSound.volume = 0.35;
+  attackSound.play();
 
   setAttackDirectionFromKeys();
   player.lastAttackTime = currentTime;
