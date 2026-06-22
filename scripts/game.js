@@ -20,7 +20,7 @@ heartImage.src = "life/Heart_container.png";
 let difficultyTimer = 0;
 let difficultyLevel = 1;
 
-function difficulty(deltaTime) {
+function updateDifficulty(deltaTime) {
   difficultyTimer += deltaTime;
 
   if (difficultyTimer >= 10000) {
@@ -47,7 +47,7 @@ function startGame() {
   player.lastAttackTime = 0;
   player.isDead = false;
   player.isAttacking = false;
-  player.attackBox = null;
+  player.playerAttackRange = null;
   player.hitEnemies.clear();
   player.facingDirection = "right";
   player.setAnimation("idle", true);
@@ -92,7 +92,7 @@ function damagePlayer(damage) {
 }
 
 // enemy update//
-function enemyMove(deltaTime) {
+function updateEnemies(deltaTime) {
   enemies.forEach((enemy) => {
     if (enemy.health <= 0) {
       enemy.death();
@@ -104,7 +104,7 @@ function enemyMove(deltaTime) {
 }
 
 // enemy death//
-function clearDeadEnemies() {
+function removeDeadEnemies() {
   for (let i = enemies.length - 1; i >= 0; i--) {
     if (enemies[i].deathAnimationFinished) {
       enemies.splice(i, 1);
@@ -114,7 +114,7 @@ function clearDeadEnemies() {
 }
 
 // enemy draw//
-function enemyDraw() {
+function drawEnemies() {
   enemies.forEach((enemy) => {
     enemy.draw(ctx);
 
@@ -178,11 +178,11 @@ function gameLoop(currentTime) {
   player.updateAnimation(deltaTime);
   player.draw(ctx);
 
-  difficulty(deltaTime);
-  enemyMove(deltaTime);
+  updateDifficulty(deltaTime);
+  updateEnemies(deltaTime);
   checkAttackHits();
-  clearDeadEnemies();
-  enemyDraw();
+  removeDeadEnemies();
+  drawEnemies();
 
   drawScore();
   drawHearts();

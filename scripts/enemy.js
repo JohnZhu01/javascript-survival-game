@@ -111,8 +111,8 @@ class enemySprite {
 // enemy player collision//
 function checkCollision(player, enemy) {
   const padding = 18;
-  const playerBox = hitbox(player, padding);
-  const enemyBox = hitbox(enemy, padding);
+  const playerBox = playerHitBox(player, padding);
+  const enemyBox = enemyHitBox(enemy, padding);
 
   const separated =
     playerBox.right < enemyBox.left ||
@@ -123,12 +123,21 @@ function checkCollision(player, enemy) {
   return !separated;
 }
 
-function hitbox(sprite, padding) {
+function playerHitBox(player, padding) {
   return {
-    left: sprite.x + padding,
-    right: sprite.x + sprite.width - padding,
-    top: sprite.y + padding,
-    bottom: sprite.y + sprite.height - padding,
+    left: player.x + padding,
+    right: player.x + player.width - padding,
+    top: player.y + padding,
+    bottom: player.y + player.height - padding,
+  };
+}
+
+function enemyHitBox(enemy, padding) {
+  return {
+    left: enemy.x + padding,
+    right: enemy.x + enemy.width - padding,
+    top: enemy.y + padding,
+    bottom: enemy.y + enemy.height - padding,
   };
 }
 

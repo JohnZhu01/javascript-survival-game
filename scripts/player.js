@@ -30,7 +30,7 @@ class playerSprite {
     this.lastAttackTime = 0;
     this.attackRange = 44;
     this.attackHeight = 52;
-    this.attackBox = null;
+    this.playerAttackRange = null;
     this.hitEnemies = new Set();
 
     this.playerHealth = 3;
@@ -64,7 +64,7 @@ class playerSprite {
         this.frameX === currentAnimation.frames - 1
       ) {
         this.isAttacking = false;
-        this.attackBox = null;
+        this.playerAttackRange = null;
         this.setAnimation("idle");
         return;
       }
@@ -253,7 +253,7 @@ function playerAttack(event) {
   setAttackDirectionFromKeys();
   player.lastAttackTime = currentTime;
   player.isAttacking = true;
-  player.attackBox = attackArea();
+  player.playerAttackRange = playerAttackRange();
   player.hitEnemies.clear();
   player.setAnimation("attack", true);
   checkAttackHits();
@@ -270,7 +270,7 @@ function setAttackDirectionFromKeys() {
 }
 
 function checkAttackHits() {
-  if (!player.isAttacking || !player.attackBox) {
+  if (!player.isAttacking || !player.playerAttackRange) {
     return;
   }
 
@@ -279,7 +279,7 @@ function checkAttackHits() {
       return;
     }
 
-    if (touching(player.attackBox, hitbox(enemy, 18))) {
+    if (boxesTouch(player.playerAttackRange, enemyHitBox(enemy, 18))) {
       enemy.health -= player.attackDamage;
       player.hitEnemies.add(enemy);
 
@@ -290,7 +290,7 @@ function checkAttackHits() {
   });
 }
 
-function attackArea() {
+function playerAttackRange() {
   const playerCenterY = player.y + player.height / 2;
   const y = playerCenterY - player.attackHeight / 2;
 
@@ -311,7 +311,7 @@ function attackArea() {
   };
 }
 
-function touching(boxA, boxB) {
+function boxesTouch(boxA, boxB) {
   const separated =
     boxA.right < boxB.left ||
     boxA.left > boxB.right ||
