@@ -154,39 +154,51 @@ const movementKeys = [
   "d",
 ];
 
+function getInputKey(event) {
+  if (event.key.length === 1) {
+    return event.key.toLowerCase();
+  }
+
+  return event.key;
+}
+
 document.addEventListener("keydown", (event) => {
-  if (movementKeys.includes(event.key)) {
+  const key = getInputKey(event);
+
+  if (movementKeys.includes(key)) {
     event.preventDefault();
   }
 
-  keys[event.key] = true;
+  keys[key] = true;
 
-  if (event.key === "ArrowLeft" || event.key === "a") {
+  if (key === "ArrowLeft" || key === "a") {
     lastHorizontalKey = "left";
   }
 
-  if (event.key === "ArrowRight" || event.key === "d") {
+  if (key === "ArrowRight" || key === "d") {
     lastHorizontalKey = "right";
   }
 });
 
 document.addEventListener("keyup", (event) => {
-  if (movementKeys.includes(event.key)) {
+  const key = getInputKey(event);
+
+  if (movementKeys.includes(key)) {
     event.preventDefault();
   }
 
-  keys[event.key] = false;
+  keys[key] = false;
 
   if (
     lastHorizontalKey === "left" &&
-    (event.key === "ArrowLeft" || event.key === "a")
+    (key === "ArrowLeft" || key === "a")
   ) {
     lastHorizontalKey = keys.ArrowRight || keys.d ? "right" : null;
   }
 
   if (
     lastHorizontalKey === "right" &&
-    (event.key === "ArrowRight" || event.key === "d")
+    (key === "ArrowRight" || key === "d")
   ) {
     lastHorizontalKey = keys.ArrowLeft || keys.a ? "left" : null;
   }
@@ -281,11 +293,14 @@ function playerAttack(event) {
 }
 
 function setAttackDirectionFromKeys() {
-  if (keys.ArrowLeft || keys.a) {
+  const movingLeft = keys.ArrowLeft || keys.a;
+  const movingRight = keys.ArrowRight || keys.d;
+
+  if (movingLeft && (!movingRight || lastHorizontalKey === "left")) {
     player.facingDirection = "left";
   }
 
-  if (keys.ArrowRight || keys.d) {
+  if (movingRight && (!movingLeft || lastHorizontalKey === "right")) {
     player.facingDirection = "right";
   }
 }
