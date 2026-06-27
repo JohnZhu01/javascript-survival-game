@@ -1,4 +1,27 @@
 const attackSound = document.getElementById("attackSound");
+const slimeDamageSound = document.getElementById("slimeDamage");
+const slimeDamageDelay = 180;
+const slimeDamageCooldown = 140;
+let lastSlimeDamageSound = 0;
+
+function playAttackSound() {
+  attackSound.currentTime = 0;
+  attackSound.volume = 0.35;
+  attackSound.play().catch(() => {});
+}
+
+function playSlimeDamageSound() {
+  const now = Date.now();
+
+  if (now - lastSlimeDamageSound < slimeDamageCooldown) {
+    return;
+  }
+
+  lastSlimeDamageSound = now;
+  slimeDamageSound.currentTime = 0;
+  slimeDamageSound.volume = 0.45;
+  slimeDamageSound.play().catch(() => {});
+}
 
 // Player class//
 class playerSprite {
@@ -246,9 +269,7 @@ function playerAttack(event) {
     return;
   }
 
-  attackSound.currentTime = 0;
-  attackSound.volume = 0.35;
-  attackSound.play();
+  playAttackSound();
 
   setAttackDirectionFromKeys();
   player.lastAttackTime = currentTime;
@@ -282,6 +303,9 @@ function checkAttackHits() {
     if (boxesTouch(player.playerAttackRange, enemyHitBox(enemy, 18))) {
       enemy.health -= player.attackDamage;
       player.hitEnemies.add(enemy);
+
+      // Wait a little so the sword sound can be heard first.
+      setTimeout(playSlimeDamageSound, slimeDamageDelay);
 
       if (enemy.health <= 0) {
         enemy.death();

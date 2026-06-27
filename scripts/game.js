@@ -11,6 +11,7 @@ let score = 0;
 
 // background music//
 const bgMusic = document.getElementById("bgMusic");
+const playerDamageSound = document.getElementById("playerDamage");
 
 // Player life system//
 const heartImage = new Image();
@@ -36,7 +37,7 @@ function startGame() {
   score = 0;
   enemies.length = 0;
 
-  bgMusic.volume = 0.4;
+  bgMusic.volume = 0.12;
   bgMusic.currentTime = 0;
   bgMusic.play().catch(() => {});
 
@@ -79,6 +80,11 @@ function damagePlayer(damage) {
 
   player.playerHealth -= damage;
   player.lastDamageTime = currentTime;
+
+  playerDamageSound.pause();
+  playerDamageSound.currentTime = 0;
+  playerDamageSound.volume = 1;
+  playerDamageSound.play().catch(() => {});
 
   if (player.playerHealth <= 0) {
     player.playerHealth = 0;
